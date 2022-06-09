@@ -27,7 +27,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         this.tweets = tweets;
     }
 
-    // for each row, inflate the layout
+    // Inflate the layout for each row
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -50,7 +50,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         return tweets.size();
     }
 
-    // Define a viewholder
+    // Define a ViewHolder to connect UI with Backend
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView ivProfileImage;
@@ -58,6 +58,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView tvScreenName;
         ImageView ivMedia;
 
+        // Put all Views in a ViewHolder
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -67,13 +68,15 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             ivMedia = itemView.findViewById(R.id.ivMedia);
         }
 
+        // Set the data for each of the views in the UI
         public void bind(Tweet tweet) {
+
             tvBody.setText(tweet.body);
             tvScreenName.setText(tweet.user.screenName);
             Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
-            // Check if media image exists
+
+            // Embed images into UI by loading media_url and toggling visibility
             if (tweet.mediaUrl != null) {
-                // Change visibility and load the images
                 ivMedia.setVisibility(View.VISIBLE);
                 Glide.with(context).load(tweet.mediaUrl).into(ivMedia);
             } else {

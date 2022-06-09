@@ -7,6 +7,7 @@ import org.parceler.Parcel;
 @Parcel
 public class User {
 
+    // Components of a Twitter user
     public String name;
     public String screenName;
     public String profileImageUrl;

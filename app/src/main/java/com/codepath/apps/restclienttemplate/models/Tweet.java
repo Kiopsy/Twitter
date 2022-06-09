@@ -16,6 +16,7 @@ import java.util.Locale;
 @Parcel
 public class Tweet {
 
+    // All different components that can create a Twitter tweet
     public String body;
     public String createdAt;
     public User user;
@@ -27,8 +28,10 @@ public class Tweet {
     private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
     private final String TAG = "Tweet";
 
+    // Empty constructor for use Parcelable
     public Tweet () {}
 
+    // Extracting Tweet information from JSON
     public static Tweet fromJson(JSONObject jsonObject) throws JSONException {
         Tweet tweet = new Tweet();
         tweet.body = jsonObject.getString("text");
@@ -51,6 +54,10 @@ public class Tweet {
         return tweets;
     }
 
+    /*
+    From Codepath to make relative timestamps on a tweet:
+    https://gist.github.com/nesquena/f786232f5ef72f6e10a7
+     */
     public String getRelativeTimeAgo(String rawJsonDate) {
         String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
         SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
