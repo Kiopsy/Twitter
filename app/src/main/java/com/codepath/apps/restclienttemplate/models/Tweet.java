@@ -17,10 +17,12 @@ import java.util.Locale;
 public class Tweet {
 
     // All different components that can create a Twitter tweet
+    public String id;
     public String body;
     public String createdAt;
     public User user;
     public String mediaUrl;
+    public String rawTime;
 
     private static final int SECOND_MILLIS = 1000;
     private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
@@ -34,10 +36,14 @@ public class Tweet {
     // Extracting Tweet information from JSON
     public static Tweet fromJson(JSONObject jsonObject) throws JSONException {
         Tweet tweet = new Tweet();
+        tweet.id = jsonObject.getString("id");
         tweet.body = jsonObject.getString("text");
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
         JSONObject entities = jsonObject.getJSONObject("entities");
+        tweet.rawTime = jsonObject.getString("created_at");
+
+        // Accounting for media within a tweet
         if (entities.has("media")) {
             tweet.mediaUrl =entities.getJSONArray("media").getJSONObject(0).getString("media_url_https");
         } else {
@@ -58,13 +64,13 @@ public class Tweet {
     From Codepath to make relative timestamps on a tweet:
     https://gist.github.com/nesquena/f786232f5ef72f6e10a7
      */
-    public String getRelativeTimeAgo(String rawJsonDate) {
+    public String getRelativeTimeAgo() {
         String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
         SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
         sf.setLenient(true);
 
         try {
-            long time = sf.parse(rawJsonDate).getTime();
+            long time = sf.parse(rawTime).getTime();
             long now = System.currentTimeMillis();
 
             final long diff = now - time;

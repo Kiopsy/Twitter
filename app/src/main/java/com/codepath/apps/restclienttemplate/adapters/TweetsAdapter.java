@@ -55,8 +55,10 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
         ImageView ivProfileImage;
         TextView tvBody;
+        TextView tvName;
         TextView tvScreenName;
         ImageView ivMedia;
+        TextView tvTimeStamp;
 
         // Put all Views in a ViewHolder
         public ViewHolder(@NonNull View itemView) {
@@ -64,15 +66,19 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             tvBody = itemView.findViewById(R.id.tvBody);
+            tvName = itemView.findViewById(R.id.tvName);
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
             ivMedia = itemView.findViewById(R.id.ivMedia);
+            tvTimeStamp = itemView.findViewById(R.id.tvTimeStamp);
         }
 
         // Set the data for each of the views in the UI
         public void bind(Tweet tweet) {
 
             tvBody.setText(tweet.body);
+            tvName.setText(tweet.user.name);
             tvScreenName.setText(tweet.user.screenName);
+            tvTimeStamp.setText(tweet.getRelativeTimeAgo());
             Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
 
             // Embed images into UI by loading media_url and toggling visibility
