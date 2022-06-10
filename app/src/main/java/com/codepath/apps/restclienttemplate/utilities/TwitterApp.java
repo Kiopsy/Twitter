@@ -2,9 +2,7 @@ package com.codepath.apps.restclienttemplate.utilities;
 
 import android.app.Application;
 import android.content.Context;
-
 import androidx.room.Room;
-
 import com.facebook.stetho.Stetho;
 
 /*

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.utilities.TwitterApp;
 import com.codepath.apps.restclienttemplate.utilities.TwitterClient;
@@ -35,7 +34,6 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 			}
 		});
 	}
-
 
 	// Inflate the menu; this adds items to the action bar if it is present.
 	@Override

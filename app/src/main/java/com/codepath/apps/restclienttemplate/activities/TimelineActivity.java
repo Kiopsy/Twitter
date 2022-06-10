@@ -6,14 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
 import com.codepath.apps.restclienttemplate.utilities.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.adapters.TweetsAdapter;
@@ -21,14 +19,11 @@ import com.codepath.apps.restclienttemplate.utilities.TwitterApp;
 import com.codepath.apps.restclienttemplate.utilities.TwitterClient;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.parceler.Parcels;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import okhttp3.Headers;
 
 public class TimelineActivity extends AppCompatActivity {
@@ -38,7 +33,7 @@ public class TimelineActivity extends AppCompatActivity {
     // Store a member variable for the listener
     private EndlessRecyclerViewScrollListener scrollListener;
 
-    TwitterClient client;
+    TwitterClient mClient;
     RecyclerView rvTweets;
     List<Tweet> tweets;
     TweetsAdapter adapter;
@@ -49,7 +44,7 @@ public class TimelineActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
 
-        client = TwitterApp.getRestClient(this);
+        mClient = TwitterApp.getRestClient(this);
 
         // Find recycler view
         rvTweets = findViewById(R.id.rvTweets);
@@ -103,9 +98,9 @@ public class TimelineActivity extends AppCompatActivity {
     // This method probably sends out a network request and appends new data items to your adapter.
     public void loadNextDataFromApi(String offset) {
         // Send an API request to retrieve appropriate paginated data
-        client = TwitterApp.getRestClient(this);
+        mClient = TwitterApp.getRestClient(this);
 
-        client.getEndlessTimeline(offset, new JsonHttpResponseHandler() {
+        mClient.getEndlessTimeline(offset, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 Log.i(TAG, "getEndlessTimeline Success!");
@@ -130,7 +125,7 @@ public class TimelineActivity extends AppCompatActivity {
         // Send the network request to fetch the updated data
         // `client` here is an instance of Android Async HTTP
         // getHomeTimeline is an example endpoint.
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
+        mClient.getHomeTimeline(new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
@@ -174,6 +169,17 @@ public class TimelineActivity extends AppCompatActivity {
             startActivityForResult(intent, REQUEST_CODE);
             return true;
         }
+        if (item.getItemId() == R.id.logoutButton) {
+            // finish();
+            // forget who's logged in
+            TwitterApp.getRestClient(this).clearAccessToken();
+
+            // navigate backwards to Login screen
+            Intent i = new Intent(this, LoginActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // this makes sure the Back button won't work
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // same as above
+            startActivity(i);
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -193,7 +199,7 @@ public class TimelineActivity extends AppCompatActivity {
     }
 
     private void populateHomeTimeline() {
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
+        mClient.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 Log.i(TAG, "onSuccess!");
@@ -213,18 +219,4 @@ public class TimelineActivity extends AppCompatActivity {
             }
         });
     }
-
-    public void onLogoutButton(View view) {
-        finish();
-        // forget who's logged in
-        TwitterApp.getRestClient(this).clearAccessToken();
-
-        // navigate backwards to Login screen
-        Intent i = new Intent(this, LoginActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // this makes sure the Back button won't work
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // same as above
-        startActivity(i);
-    }
-
-
 }

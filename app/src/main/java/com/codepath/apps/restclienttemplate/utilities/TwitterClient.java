@@ -1,7 +1,6 @@
 package com.codepath.apps.restclienttemplate.utilities;
 
 import android.content.Context;
-
 import com.codepath.apps.restclienttemplate.BuildConfig;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.asynchttpclient.RequestParams;
@@ -63,32 +62,31 @@ public class TwitterClient extends OAuthBaseClient {
 	}
 
 	// Interacting with tweets: retweet & favorite
-
 	public void retweet(String tweetID, JsonHttpResponseHandler handler) {
-		String apiUrl = getApiUrl(String.format("statuses/retweet/%s.json", tweetID));
+		String apiUrl = getApiUrl("statuses/retweet.json");
 		RequestParams params = new RequestParams();
-		params.put("id", Integer.parseInt(tweetID));
+		params.put("id", Long.valueOf(tweetID));
 		client.post(apiUrl, params, "", handler);
 	}
 
 	public void unRetweet(String tweetID, JsonHttpResponseHandler handler) {
-		String apiUrl = getApiUrl(String.format("statuses/unretweet/%s.json", tweetID));
+		String apiUrl = getApiUrl("statuses/unretweet.json");
 		RequestParams params = new RequestParams();
-		params.put("id", Integer.parseInt(tweetID));
+		params.put("id", Long.valueOf(tweetID));
 		client.post(apiUrl, params, "", handler);
 	}
 
 	public void favorite(String tweetID, JsonHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("favorites/create.json");
 		RequestParams params = new RequestParams();
-		params.put("id", Integer.parseInt(tweetID));
+		params.put("id", Long.valueOf(tweetID));
 		client.post(apiUrl, params, "", handler);
 	}
 
 	public void unFavorite(String tweetID, JsonHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("favorites/destroy.json");
 		RequestParams params = new RequestParams();
-		params.put("id", Integer.parseInt(tweetID));
+		params.put("id", Long.valueOf(tweetID));
 		client.post(apiUrl, params, "", handler);
 	}
 }

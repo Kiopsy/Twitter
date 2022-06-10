@@ -2,7 +2,6 @@ package com.codepath.apps.restclienttemplate.utilities;
 
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
-
 import com.codepath.apps.restclienttemplate.models.SampleModel;
 import com.codepath.apps.restclienttemplate.models.SampleModelDao;
 
