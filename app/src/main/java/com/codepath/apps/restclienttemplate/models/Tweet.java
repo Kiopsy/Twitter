@@ -23,12 +23,16 @@ public class Tweet {
     public User user;
     public String mediaUrl;
     public String rawTime;
+    public int retweetCount;
+    public int favoriteCount;
+    public boolean retweeted;
+    public boolean favorited;
 
     private static final int SECOND_MILLIS = 1000;
     private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
     private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
     private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
-    private final String TAG = "Tweet";
+    public final String TAG = "Tweet";
 
     // Empty constructor for use Parcelable
     public Tweet () {}
@@ -49,6 +53,13 @@ public class Tweet {
         } else {
             tweet.mediaUrl = null;
         }
+
+        // Tweet interactions
+        tweet.retweetCount = jsonObject.getInt("retweet_count");
+        tweet.retweeted = jsonObject.getBoolean("retweeted");
+        tweet.favoriteCount = jsonObject.getInt("favorite_count");
+        tweet.favorited = jsonObject.getBoolean("favorited");
+
         return tweet;
     }
 

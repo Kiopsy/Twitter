@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate.adapters;
 
 import android.content.Context;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +61,12 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         ImageView ivMedia;
         TextView tvTimeStamp;
 
+        // For tweet interactions
+        TextView tvRetweetCount;
+        TextView tvFavoriteCount;
+        ImageView ivRetweet;
+        ImageView ivFavorite;
+
         // Put all Views in a ViewHolder
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -70,6 +77,11 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
             ivMedia = itemView.findViewById(R.id.ivMedia);
             tvTimeStamp = itemView.findViewById(R.id.tvTimeStamp);
+
+//            TextView tvRetweetCount = itemView.findViewById(R.id.tvRetweetCount);
+//            TextView tvFavoriteCount = itemView.findViewById(R.id.tvRetweetCount);
+//            ImageView ivRetweet = itemView.findViewById(R.id.ivRetweet);
+//            ImageView ivFavorite = itemView.findViewById(R.id.ivFavorite);
         }
 
         // Set the data for each of the views in the UI
@@ -88,6 +100,23 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             } else {
                 ivMedia.setVisibility(View.GONE);
             }
+
+//            // Check tweet interactions and set labels and image sources accordingly
+//            tvRetweetCount.setText(tweet.retweetCount);
+//            tvFavoriteCount.setText(tweet.favoriteCount);
+//
+//            int retweetImg;
+//            int favoriteImg;
+//
+//            retweetImg = tweet.retweeted ?
+//                    R.drawable.ic_vector_retweet :
+//                    R.drawable.ic_vector_retweet_stroke;
+//            ivRetweet.setImageResource(retweetImg);
+//
+//            favoriteImg = tweet.retweeted ?
+//                    R.drawable.ic_vector_heart :
+//                    R.drawable.ic_vector_heart_stroke;
+//            ivFavorite.setImageResource(favoriteImg);
         }
     }
 

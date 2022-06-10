@@ -58,9 +58,24 @@ public class TimelineActivity extends AppCompatActivity {
         tweets = new ArrayList<>();
         adapter = new TweetsAdapter(this, tweets);
 
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+
         // Recycler view setup: layout manager and adapter
-        rvTweets.setLayoutManager(new LinearLayoutManager(this));
+        rvTweets.setLayoutManager(linearLayoutManager);
         rvTweets.setAdapter(adapter);
+
+        // Retain an instance so that you can call `resetState()` for fresh searches
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                Tweet lastTweet = tweets.get(tweets.size() - 1);
+                // Add whatever code is needed to append new items to the bottom of the list
+                loadNextDataFromApi(lastTweet.id);
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rvTweets.addOnScrollListener(scrollListener);
 
         // Refreshing swipe layout
         // Lookup the swipe container view
@@ -85,6 +100,32 @@ public class TimelineActivity extends AppCompatActivity {
         populateHomeTimeline();
     }
 
+    // This method probably sends out a network request and appends new data items to your adapter.
+    public void loadNextDataFromApi(String offset) {
+        // Send an API request to retrieve appropriate paginated data
+        client = TwitterApp.getRestClient(this);
+
+        client.getEndlessTimeline(offset, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                Log.i(TAG, "getEndlessTimeline Success!");
+                JSONArray jsonArray = json.jsonArray;
+                try {
+                    adapter.addAll(Tweet.fromJsonArray(jsonArray));
+                    adapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    Log.e(TAG, "Json exception", e);
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.e(TAG, "onFailure!" + response, throwable);
+            }
+        });
+    }
+
     public void fetchTimelineAsync(int page) {
         // Send the network request to fetch the updated data
         // `client` here is an instance of Android Async HTTP
@@ -104,6 +145,9 @@ public class TimelineActivity extends AppCompatActivity {
                     Log.e(TAG, "Json exception", e);
                     e.printStackTrace();
                 }
+
+                swipeContainer.setRefreshing(false);
+                scrollListener.resetState();
             }
 
             @Override
@@ -127,7 +171,6 @@ public class TimelineActivity extends AppCompatActivity {
             //  Toast.makeText(this, "Compose!", Toast.LENGTH_SHORT).show();
             // Navigate to the compose activity
             Intent intent = new Intent(this, ComposeActivity.class);
-            // TODO: Fix this depreciated value
             startActivityForResult(intent, REQUEST_CODE);
             return true;
         }
@@ -182,4 +225,6 @@ public class TimelineActivity extends AppCompatActivity {
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // same as above
         startActivity(i);
     }
+
+
 }
